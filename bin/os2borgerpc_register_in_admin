@@ -22,7 +22,7 @@ admin = OS2borgerPCAdmin(urllib.parse.urljoin(admin_url, xml_rpc_url))
 # Data collected, now register computer.
 
 try:
-    uid = admin.register_new_computer(mac, computer_name, None, site, data)
+    uid = admin.register_new_computer(mac, computer_name, site, data)
     config.set_value('uid', uid)
     config.save()
 

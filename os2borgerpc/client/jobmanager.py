@@ -448,9 +448,7 @@ def report_job_results(joblist):
 
     try:
         # This returns 0 on various interpretations of success
-        return remote.send_status_info(
-            uid, None, joblist, update_required=check_outstanding_packages()
-        )
+        return remote.send_status_info(uid, joblist)
     except Exception:
         print("Failed to check in with the admin-site")
         traceback.print_exc()

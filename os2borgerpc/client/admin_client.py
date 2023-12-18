@@ -21,17 +21,13 @@ class OS2borgerPCAdmin(object):
         rpc_args = {"verbose": verbose, "allow_none": True}
         self._rpc_srv = xmlrpc.client.ServerProxy(url, **rpc_args)
 
-    def register_new_computer(self, mac, name, distribution, site, configuration):
+    def register_new_computer(self, mac, name, site, configuration):
         """register_new_computer from the admin site rpc module."""
-        return self._rpc_srv.register_new_computer(
-            mac, name, distribution, site, configuration
-        )
+        return self._rpc_srv.register_new_computer_v2(mac, name, site, configuration)
 
-    def send_status_info(self, pc_uid, package_data, job_data, update_required=None):
+    def send_status_info(self, pc_uid, job_data):
         """send_status_info from the admin site rpc module."""
-        return self._rpc_srv.send_status_info(
-            pc_uid, package_data, job_data, update_required
-        )
+        return self._rpc_srv.send_status_info_v2(pc_uid, job_data)
 
     def get_instructions(self, pc_uid):
         """get_instructions from the admin site rpc module."""
