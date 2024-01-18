@@ -87,7 +87,9 @@ def collect_security_events(now):
     for event in csv_file_lines:
         event_split = event.split(",")
         if len(event_split) < 3 or len(event_split) > 4:
-            logger.debug("A Security Event had an incorrect number of attributes. Skipping it.")
+            logger.debug(
+                "A Security Event had an incorrect number of attributes. Skipping it."
+            )
             continue
         else:
             event_date_str = event_split[0]
