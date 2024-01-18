@@ -8,6 +8,7 @@ import stat
 import subprocess
 import sys
 import traceback
+import logging
 
 from os2borgerpc.client.admin_client import OS2borgerPCAdmin
 from os2borgerpc.client.utils import get_url_and_uid
@@ -21,6 +22,11 @@ LAST_SECURITY_EVENTS_CHECKED_TIME = SECURITY_DIR / "lastcheck.txt"
 SECURITY_EVENT_FILE = SECURITY_DIR / "securityevent.csv"
 # Log file for the output of the security scripts.
 SECURITY_SCRIPTS_LOG_FILE = SECURITY_DIR / "security_log.txt"
+# The expected datetime format for security events, and lastcheck
+EVENT_DATE_FORMAT = "%Y%m%d%H%M%S"
+
+# SETUP LOGGING
+logger = logging.getLogger("os2bpc")
 
 
 def cleanup_security_scripts():
@@ -77,10 +83,31 @@ def collect_security_events(now):
         csv_file_lines = csv_file.readlines()
 
     new_security_events = []
-    for line in csv_file_lines:
-        csv_split = line.split(",")
-        if datetime.strptime(csv_split[0], "%Y%m%d%H%M%S") > last_check:
-            new_security_events.append(line)
+
+    for event in csv_file_lines:
+        event_split = event.split(",")
+        if len(event_split) < 3 or len(event_split) > 4:
+            logger.debug("A Security Event had an incorrect number of attributes. Skipping it.")
+            continue
+        else:
+            event_date_str = event_split[0]
+            rule_id = event_split[1]
+            try:
+                int(rule_id)
+            except ValueError:
+                logger.debug(
+                    "A Security Event referenced a non-numeric (ie. invalid) Security Rule. Skipping it."
+                )
+                continue
+            try:
+                event_date = datetime.strptime(event_date_str, EVENT_DATE_FORMAT)
+            except ValueError:
+                logger.debug(
+                    "A Security Event had an invalid date-timestamp. Skipping it."
+                )
+                continue
+        if event_date > last_check:
+            new_security_events.append(event)
 
     return new_security_events
 
@@ -105,7 +132,7 @@ def send_security_events(security_events):
 def update_last_security_events_checked_time(datetime_obj):
     """Update LAST_SECURITY_EVENTS_CHECKED_TIME from a datetime object."""
     with open(LAST_SECURITY_EVENTS_CHECKED_TIME, "wt") as f:
-        f.write(datetime_obj.strftime("%Y%m%d%H%M%S"))
+        f.write(datetime_obj.strftime(EVENT_DATE_FORMAT))
 
 
 def read_last_security_events_checked_time():
@@ -121,7 +148,7 @@ def read_last_security_events_checked_time():
         if not content:
             return None
         try:
-            datetime_obj = datetime.strptime(content, "%Y%m%d%H%M%S")
+            datetime_obj = datetime.strptime(content, EVENT_DATE_FORMAT)
         except ValueError:
             return None
         return datetime_obj
