@@ -410,28 +410,6 @@ def update_configuration_from_server(configurations):
     config.save()
 
 
-def check_outstanding_packages():
-    """
-    Get number of packages with updates and number of security updates.
-
-    This is really a wrapper for apt-check.
-    """
-    try:
-        proc = subprocess.Popen(
-            ["/usr/lib/update-notifier/apt-check"],
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-            shell=True,
-        )
-        _, err = proc.communicate()
-        package_updates, security_updates = [int(x) for x in err.split(";")]
-        return (package_updates, security_updates)
-    except Exception:
-        print("apt-check failed\n", file=sys.stderr)
-        traceback.print_exc()
-        return None
-
-
 def report_job_results(joblist):
     """Report job results back to the admin site server."""
     (remote_url, uid) = get_url_and_uid()
@@ -448,9 +426,7 @@ def report_job_results(joblist):
 
     try:
         # This returns 0 on various interpretations of success
-        return remote.send_status_info(
-            uid, None, joblist, update_required=check_outstanding_packages()
-        )
+        return remote.send_status_info(uid, joblist)
     except Exception:
         print("Failed to check in with the admin-site")
         traceback.print_exc()
