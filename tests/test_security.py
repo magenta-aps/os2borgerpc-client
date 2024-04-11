@@ -14,9 +14,9 @@ class TestCollectSecurityEvents:
         security_event_file = security_dir.join("securityevent.csv")
 
         security_event_lines = (
-            "20220101115601,Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: root : TTY=pts/0"
+            "20220101115601,1,Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: root : TTY=pts/0"
             " ; PWD=/home/user ; USER=root ; COMMAND=/usr/bin/ls\n"
-            "20220101115601,Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo:"
+            "20220101115601,1,Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo:"
             " pam_unix(sudo:session): session opened for user root by (uid=0)\n"
         )
         # Write some generated security events.
@@ -34,12 +34,12 @@ class TestCollectSecurityEvents:
         # Assert the security_events are returned.
         assert security_events == [
             (
-                "20220101115601,"
+                "20220101115601,1,"
                 "Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: root : TTY=pts/0 ;"
                 " PWD=/home/user ; USER=root ; COMMAND=/usr/bin/ls\n"
             ),
             (
-                "20220101115601,"
+                "20220101115601,1,"
                 "Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo: pam_unix(sudo:session):"
                 " session opened for user root by (uid=0)\n"
             ),
@@ -58,12 +58,12 @@ class TestSendSecurityEvents:
 
         security_events = [
             (
-                "202201011156,"
+                "202201011156,1,"
                 "Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: root : TTY=pts/0 ;"
                 " PWD=/home/user ; USER=root ; COMMAND=/usr/bin/ls\n"
             ),
             (
-                "202201011156,"
+                "202201011156,1,"
                 "Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo: pam_unix(sudo:session):"
                 " session opened for user root by (uid=0)\n"
             ),
@@ -92,12 +92,12 @@ class TestSendSecurityEvents:
 
         security_events = [
             (
-                "202201011156,"
+                "202201011156,1,"
                 "Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: root : TTY=pts/0 ;"
                 " PWD=/home/user ; USER=root ; COMMAND=/usr/bin/ls\n"
             ),
             (
-                "202201011156,"
+                "202201011156,1,"
                 "Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo: pam_unix(sudo:session):"
                 " session opened for user root by (uid=0)\n"
             ),
@@ -174,9 +174,9 @@ class TestCheckSecurityEvents:
         security_event_file = security_dir.join("securityevent.csv")
 
         security_event_lines = (
-            "20220101115601,Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: "
+            "20220101115601,1,Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: "
             "root : TTY=pts/0 ; PWD=/home/user ; USER=root ; COMMAND=/usr/bin/ls\n"
-            "20220101115602,Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo:"
+            "20220101115602,1,Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo:"
             " pam_unix(sudo:session): session opened for user root by (uid=0)\n"
         )
         # Write some generated security events.
@@ -207,10 +207,10 @@ class TestCheckSecurityEvents:
             calls = [
                 mock.call(
                     [
-                        "20220101115601,Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: root "
+                        "20220101115601,1,Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: root "
                         ": TTY=pts/0 ; PWD=/home/user ; USER=root ;"
                         " COMMAND=/usr/bin/ls\n",
-                        "20220101115602,Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo: "
+                        "20220101115602,1,Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo: "
                         "pam_unix(sudo:session): session opened for user "
                         "root by (uid=0)\n",
                     ]
@@ -219,10 +219,10 @@ class TestCheckSecurityEvents:
             assert send_security_events_mock.call_args_list == calls
 
             security_event_lines = (
-                "20220101115601,Jan 01 11:56:05  shg-borgerpc-3-1-1 sudo: "
+                "20220101115601,1,Jan 01 11:56:05  shg-borgerpc-3-1-1 sudo: "
                 "root : TTY=pts/0 ; PWD=/home/user ; USER=root "
                 "; COMMAND=/usr/bin/ls\n"
-                "20220101115602,Jan 01 11:56:06  shg-borgerpc-3-1-1 sudo: "
+                "20220101115602,1,Jan 01 11:56:06  shg-borgerpc-3-1-1 sudo: "
                 "pam_unix(sudo:session): session opened for user root by (uid=0)\n"
             )
             security_event_file.write(security_event_lines)
@@ -236,10 +236,10 @@ class TestCheckSecurityEvents:
             calls = [
                 mock.call(
                     [
-                        "20220101115601,Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: root "
+                        "20220101115601,1,Jan 01 11:56:01  shg-borgerpc-3-1-1 sudo: root "
                         ": TTY=pts/0 ; PWD=/home/user ; USER=root ;"
                         " COMMAND=/usr/bin/ls\n",
-                        "20220101115602,Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo: "
+                        "20220101115602,1,Jan 01 11:56:02  shg-borgerpc-3-1-1 sudo: "
                         "pam_unix(sudo:session): session opened for user "
                         "root by (uid=0)\n",
                     ]
