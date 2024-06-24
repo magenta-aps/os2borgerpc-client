@@ -62,10 +62,8 @@ while true; do
 
     echo "Enter your site UID:"
     read -r SITE
-    if [[ -n "$SITE" ]]
+    if [[ -z "$SITE" ]]
     then
-        set_os2borgerpc_config site "$SITE"
-    else
         fatal "The computer cannot be registered without a site" && continue || exit 1
     fi
 
@@ -136,7 +134,7 @@ while true; do
 
     # OK, we got the config.
     # Do the deed.
-    if ! os2borgerpc_register_in_admin "$NEW_COMPUTER_NAME"; then
+    if ! os2borgerpc_register_in_admin "$NEW_COMPUTER_NAME" "$SITE"; then
         fatal "Registration failed" && continue || exit 1
     fi
 
