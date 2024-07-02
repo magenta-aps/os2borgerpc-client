@@ -68,23 +68,6 @@ while true; do
     fi
 
 
-    # - distribution
-    # Attempt to detect OS version, otherwise prompt user for it
-
-    unset DISTRO
-    if [[ -r /etc/os-release ]]; then
-        # shellcheck source=/dev/null
-        . /etc/os-release
-        DISTRO="$ID""$VERSION_ID"
-    else
-        echo "We cannot detect the installed operating system." \
-             "Please enter an ID for the PC distribution:"
-        read -r DISTRO
-    fi
-
-    set_os2borgerpc_config distribution "$DISTRO"
-
-
     # - mac
     #   Get the mac-address
     set_os2borgerpc_config mac "$(ip addr | grep link/ether | awk 'FNR==1{print $2}')"
