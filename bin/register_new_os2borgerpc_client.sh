@@ -91,6 +91,12 @@ while true; do
     set_os2borgerpc_config admin_url "$ADMIN_URL"
 
     # - set additional config values
+    OS_NAME=$(lsb_release --id --short)
+    set_os2borgerpc_config os_name "$OS_NAME"
+
+    OS_RELEASE=$(lsb_release --release --short)
+    set_os2borgerpc_config os_release "$OS_RELEASE"
+
     PC_MODEL=$(dmidecode --type system | grep Product | cut --delimiter : --fields 2)
     [ -z "$PC_MODEL" ] && PC_MODEL="Identification failed"
     PC_MODEL=${PC_MODEL:0:100}
