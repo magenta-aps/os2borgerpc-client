@@ -15,7 +15,6 @@ from datetime import datetime
 from os import stat as os_stat
 
 import chardet
-import distro
 import pkg_resources
 
 from os2borgerpc.client.admin_client import OS2borgerPCAdmin
@@ -529,8 +528,6 @@ def update_and_run():
     os.makedirs(JOBS_DIR, mode=0o700, exist_ok=True)
     config = OS2borgerPCConfig()
     # Get OS info for configuration
-    os_name = distro.name()
-    os_release = distro.version()
     try:
         ip_addresses = subprocess.run(
             ["hostname", "--all-ip-addresses"], capture_output=True, text=True
@@ -566,8 +563,6 @@ def update_and_run():
                 send_config_values(
                     {
                         "_os2borgerpc.client_version": OS2BORGERPC_CLIENT_VERSION,
-                        "_os_release": os_release,
-                        "_os_name": os_name,
                         "_ip_addresses": ip_addresses,
                         "_kernel_version": kernel_version,
                         "_last_automatic_update_time": last_automatic_update_time,
