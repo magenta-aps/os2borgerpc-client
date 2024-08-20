@@ -13,10 +13,6 @@ official home page:
 
     https://os2.eu/produkt/os2borgerpc
 
-and the offical Github project:
-
-    https://github.com/OS2borgerPC/
-
 Read the documentation for this project in the docs/ directory or at
 `Read The Docs <https://os2borgerpc-client.readthedocs.io/>`_.
 
